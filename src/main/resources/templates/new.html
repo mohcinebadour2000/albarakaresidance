@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Gestion des clients</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+</head>
+<body>
+<div class="container">
+    <h1 th:text="${client.id != null} ? 'Modifier le client' : 'Enregistrer un nouveau client'"></h1>
+
+    <!-- Notification de validation des dates -->
+    <div class="alert alert-danger" id="dateError" style="display:none;">
+        La date de début de réservation ne peut pas être supérieure à la date de fin de réservation.
+    </div>
+
+    <form id="clientForm" th:action="@{/save}" th:object="${client}" method="post">
+        <input type="hidden" th:field="*{id}" />
+
+        <div class="form-group">
+            <label for="clientName">Nom du client :</label>
+            <input type="text" class="form-control" id="clientName" th:field="*{clientName}" placeholder="Entrez le nom du client" required>
+        </div>
+
+        <div class="form-group">
+            <label for="idCard">Carte d'identité :</label>
+            <input type="text" class="form-control" id="idCard" th:field="*{idCard}" placeholder="Entrez la carte d'identité" required>
+        </div>
+
+        <div class="form-group">
+            <label for="price">Prix :</label>
+            <input type="number" class="form-control" id="price" th:field="*{price}" placeholder="Entrez le prix" required>
+        </div>
+
+        <!-- Champ pour le numéro de téléphone -->
+        <div class="form-group">
+            <label for="phoneNumber">Numéro de téléphone :</label>
+            <input type="text" class="form-control" id="phoneNumber" th:field="*{phoneNumber}"
+                   placeholder="Entrez le numéro de téléphone" pattern="^\+?[0-9\s-]{8,15}$"
+                   title="Entrez un numéro de téléphone valide (ex: +123456789 ou 0123456789)" required>
+        </div>
+
+        <!-- Boutons radio pour sélectionner un numéro d'appartement -->
+        <div class="form-group">
+            <label>Numéro d'appartement :</label>
+            <div>
+                <label><input type="radio" value="M" name="apartments" required /> Appartement M</label><br>
+                <label><input type="radio" value="1" name="apartments" required /> Appartement 1</label><br>
+                <label><input type="radio" value="2" name="apartments" required /> Appartement 2</label><br>
+                <label><input type="radio" value="3" name="apartments" required /> Appartement 3</label><br>
+                <label><input type="radio" value="4" name="apartments" required /> Appartement 4</label><br>
+                <label><input type="radio" value="5" name="apartments" required /> Appartement 5</label><br>
+                <label><input type="radio" value="6" name="apartments" required /> Appartement 6</label><br>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="reservationStartDate">Date de début de réservation :</label>
+            <input type="date" class="form-control" id="reservationStartDate" th:field="*{reservationStartDate}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="reservationEndDate">Date de fin de réservation :</label>
+            <input type="date" class="form-control" id="reservationEndDate" th:field="*{reservationEndDate}" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+    </form>
+</div>
+
+<script>
+    // Ajoute un écouteur d'événement pour la soumission du formulaire
+    document.getElementById('clientForm').addEventListener('submit', function(event) {
+        const startDate = new Date(document.getElementById('reservationStartDate').value);
+        const endDate = new Date(document.getElementById('reservationEndDate').value);
+
+        // Vérifie si la date de début est supérieure à la date de fin
+        if (startDate > endDate) {
+            // Empêche la soumission du formulaire
+            event.preventDefault();
+
+            // Affiche une notification d'erreur
+            document.getElementById('dateError').style.display = 'block';
+        } else {
+            // Cache la notification d'erreur si les dates sont valides
+            document.getElementById('dateError').style.display = 'none';
+        }
+    });
+</script>
+
+</body>
+</html>

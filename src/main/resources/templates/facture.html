@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Facture</title>
+    <style>
+        /* Corps de la page */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 29.7cm; /* Hauteur A4 */
+            background-color: #f9f9f9;
+            line-height: 1.6;
+        }
+
+        /* Conteneur principal */
+        .container {
+            width: 21cm; /* Largeur A4 */
+            height: 27cm;
+            display: flex;
+            flex-direction: column;
+            padding: 2cm;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            box-sizing: border-box;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .invoice-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center; /* Aligne verticalement les éléments */
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .client-info, .company-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .invoice-info p {
+            margin: 5px 0; /* Ajoute de l'espacement entre les lignes */
+        }
+
+        .table-container {
+            margin-top: 30px;
+            width: 100%;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            word-wrap: break-word; /* Permet le retour à la ligne dans les cellules */
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .totals {
+            text-align: right;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        .totals div {
+            margin-bottom: 5px;
+        }
+
+        .total-due {
+            color: red;
+            font-weight: bold;
+            font-size: 24px;
+            margin-top: 10px;
+        }
+
+        .thank-you {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 18px;
+            color: #555;
+        }
+
+        .payment-info {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #555;
+        }
+
+        .payment-info p {
+            margin: 5px 0;
+        }
+
+        .download-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background-color: #5bc0de;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            background-color: #31b0d5;
+        }
+
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                display: block;
+                width: 21cm;
+                height: 29.7cm;
+            }
+
+            @page {
+                size: A4 portrait;
+                margin: 1cm;
+            }
+
+            .download-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Bouton pour télécharger la facture en PDF, placé en dehors du container -->
+<div class="download-btn">
+    <a class="btn" th:href="@{'/facture/pdf/' + ${client.id}}" role="button">Télécharger la facture en PDF</a>
+</div>
+
+<!-- Conteneur de la facture -->
+<div class="container">
+    <!-- Header de la facture -->
+    <div class="header">
+        <h2>Facture</h2>
+    </div>
+
+    <!-- Informations de la facture -->
+    <div class="invoice-info">
+        <div class="client-info">
+            <p><strong>Numéro de facture:</strong> <span th:text="${client.id}">[Numéro de facture]</span></p>
+            <p><strong>Nom du client:</strong> <span th:text="${client.clientName}">[Nom du client]</span></p>
+            <p><strong>CIN:</strong> <span th:text="${client.idCard}">[CIN]</span></p>
+
+
+        </div>
+        <div class="company-info">
+            <p> </p>
+        </div>
+    </div>
+
+    <!-- Tableau des articles de la facture -->
+    <div class="table-container">
+        <table>
+            <thead>
+            <tr>
+<!--                <th>Numéro de facture</th>-->
+                <th>Description</th>
+                <th>Date de début</th>
+                <th>Date de fin</th>
+                <th>Prix HT (MAD)</th>
+                <th>TVA (MAD)</th>
+                <th>Prix TTC (MAD)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+<!--                <td th:text="${client.id}">[Numéro de facture]</td>-->
+                <td th:text="${client.designation}">[Désignation]</td>
+                <td th:text="${startDateFormatted}">[Date de début]</td>
+                <td th:text="${endDateFormatted}">[Date de fin]</td>
+                <td th:text="${priceHtFormatted}">[Prix HT]</td>
+                <td th:text="${tvaFormatted}">[TVA]</td>
+                <td th:text="${priceFormatted}">[Prix TTC]</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Totaux de la facture -->
+    <div class="totals">
+        <div><strong> </strong> <span  > </span>  </div>
+        <div><strong> </strong> <span  > </span>  </div>
+
+        <div class="total-due">Total TTC: <span th:text="${priceFormatted}">[Total TTC]</span> MAD</div>
+    </div>
+
+    <!-- Informations de paiement -->
+    <div class="payment-info">
+        <p><strong> </strong></p>
+        <p> </p>
+        <p> </p>
+        <p><strong> </strong> <span  > </span></p>
+    </div>
+
+    <!-- Message de remerciement -->
+    <div class="thank-you">
+        <p>Merci pour votre confiance !</p>
+    </div>
+</div>
+
+
+
+</body>
+</html>
