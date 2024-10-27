@@ -71,20 +71,21 @@ public class ClientController {
                              @RequestParam("reservationStartDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
                              @RequestParam("reservationEndDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
                              @RequestParam(value = "apartments", required = false) List<String> apartments,
-                             @RequestParam("phoneNumber") String phoneNumber) {
+                             @RequestParam("phoneNumber") String phoneNumber,
+                             @RequestParam("issueDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate issueDate) {
         if (result.hasErrors()) {
             return "new";
         }
 
+        // Mise à jour des attributs de l'entité
         clientEntity.setReservationStartDate(startDate);
         clientEntity.setReservationEndDate(endDate);
+        clientEntity.setIssueDate(issueDate);
 
         String designation = (apartments != null && !apartments.isEmpty())
                 ? "Appartements: " + String.join(", ", apartments)
                 : "Aucun appartement sélectionné";
         clientEntity.setDesignation(designation);
-
-        // Définir le numéro de téléphone du client
         clientEntity.setPhoneNumber(phoneNumber);
 
         service.save(clientEntity);
@@ -127,6 +128,8 @@ public class ClientController {
                 ? client.getReservationStartDate().format(formatter) : "N/A";
         String endDateFormatted = client.getReservationEndDate() != null
                 ? client.getReservationEndDate().format(formatter) : "N/A";
+        String issueDateFormatted = client.getIssueDate() != null
+                ? client.getIssueDate().format(formatter) : "N/A";
 
         String priceHtFormatted = formatBigDecimal(client.getPriceHt());
         String tvaFormatted = formatBigDecimal(client.getTva());
@@ -135,6 +138,7 @@ public class ClientController {
         model.addAttribute("client", client);
         model.addAttribute("startDateFormatted", startDateFormatted);
         model.addAttribute("endDateFormatted", endDateFormatted);
+        model.addAttribute("issueDateFormatted", issueDateFormatted);
         model.addAttribute("priceHtFormatted", priceHtFormatted);
         model.addAttribute("tvaFormatted", tvaFormatted);
         model.addAttribute("priceFormatted", priceFormatted);

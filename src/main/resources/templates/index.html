@@ -4,6 +4,7 @@
 
 <head>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/cosmo/bootstrap.min.css" />
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script>
     function confirmDelete(event) {
@@ -49,6 +50,7 @@
             <th>Prix TTC</th>
             <th>Date de début de réservation</th>
             <th>Date de fin de réservation</th>
+            <th>Date d'émission</th> <!-- Nouvelle colonne pour la date d'émission -->
             <th>Éditer</th>
             <th>Supprimer</th>
             <th>Facture</th>
@@ -64,8 +66,9 @@
             <td th:text="${clients.priceHt}">Prix HT</td>
             <td th:text="${clients.tva}">TVA</td>
             <td th:text="${clients.price}">Prix TTC</td>
-            <td th:text="${clients.reservationStartDate}">Date de début</td>
-            <td th:text="${clients.reservationEndDate}">Date de fin</td>
+            <td th:text="${#temporals.format(clients.reservationStartDate, 'dd/MM/yyyy')}">Date de début</td>
+            <td th:text="${#temporals.format(clients.reservationEndDate, 'dd/MM/yyyy')}">Date de fin</td>
+            <td th:text="${#temporals.format(clients.issueDate, 'dd/MM/yyyy')}">Date d'émission</td> <!-- Affichage de la date d'émission -->
             <td>
               <a class="btn btn-warning" th:href="@{'/edit/' + ${clients.id}}">Éditer</a>
             </td>
@@ -83,7 +86,7 @@
             <td th:text="${totalPriceHt}">Total Prix HT</td>
             <td th:text="${totalTva}">Total TVA</td>
             <td th:text="${totalPriceTtc}">Total Prix TTC</td>
-            <td colspan="5"></td>
+            <td colspan="6"></td>
           </tr>
           </tfoot>
         </table>

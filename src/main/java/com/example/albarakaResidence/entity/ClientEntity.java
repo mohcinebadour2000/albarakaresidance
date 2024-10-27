@@ -26,6 +26,17 @@ public class ClientEntity {
     private LocalDate reservationStartDate;
     private LocalDate reservationEndDate;
 
+    private LocalDate issueDate;
+
+    // Getters et Setters
+    public LocalDate getIssueDate() {
+        return issueDate;
+    }
+
+    public void setIssueDate(LocalDate issueDate) {
+        this.issueDate = issueDate;
+    }
+
     @NotBlank(message = "Le numéro de téléphone est obligatoire")
     @Pattern(regexp = "^\\+?[0-9]*$", message = "Numéro de téléphone invalide")
     private String phoneNumber;

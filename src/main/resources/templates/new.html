@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Gestion des clients</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
@@ -16,19 +17,32 @@
     <form id="clientForm" th:action="@{/save}" th:object="${client}" method="post">
         <input type="hidden" th:field="*{id}" />
 
+        <!-- Champ pour la date d'émission -->
+        <div class="form-group">
+            <label for="issueDate">Date d'émission :</label>
+            <input type="date" class="form-control" id="issueDate" th:field="*{issueDate}"
+                   th:value="${#temporals.format(client.issueDate, 'yyyy-MM-dd')}" required>
+        </div>
+
+        <!-- Champ pour le nom du client -->
         <div class="form-group">
             <label for="clientName">Nom du client :</label>
-            <input type="text" class="form-control" id="clientName" th:field="*{clientName}" placeholder="Entrez le nom du client" required>
+            <input type="text" class="form-control" id="clientName" th:field="*{clientName}"
+                   placeholder="Entrez le nom du client" required>
         </div>
 
+        <!-- Champ pour la carte d'identité -->
         <div class="form-group">
             <label for="idCard">Carte d'identité :</label>
-            <input type="text" class="form-control" id="idCard" th:field="*{idCard}" placeholder="Entrez la carte d'identité" required>
+            <input type="text" class="form-control" id="idCard" th:field="*{idCard}"
+                   placeholder="Entrez la carte d'identité" required>
         </div>
 
+        <!-- Champ pour le prix -->
         <div class="form-group">
             <label for="price">Prix :</label>
-            <input type="number" class="form-control" id="price" th:field="*{price}" placeholder="Entrez le prix" required>
+            <input type="number" class="form-control" id="price" th:field="*{price}"
+                   placeholder="Entrez le prix" required>
         </div>
 
         <!-- Champ pour le numéro de téléphone -->
@@ -43,26 +57,38 @@
         <div class="form-group">
             <label>Numéro d'appartement :</label>
             <div>
-                <label><input type="radio" value="M" name="apartments" required /> Appartement M</label><br>
-                <label><input type="radio" value="1" name="apartments" required /> Appartement 1</label><br>
-                <label><input type="radio" value="2" name="apartments" required /> Appartement 2</label><br>
-                <label><input type="radio" value="3" name="apartments" required /> Appartement 3</label><br>
-                <label><input type="radio" value="4" name="apartments" required /> Appartement 4</label><br>
-                <label><input type="radio" value="5" name="apartments" required /> Appartement 5</label><br>
-                <label><input type="radio" value="6" name="apartments" required /> Appartement 6</label><br>
+                <label><input type="radio" value="M" name="apartments"
+                              th:checked="${client.designation?.contains('M')}" required> Appartement M</label><br>
+                <label><input type="radio" value="1" name="apartments"
+                              th:checked="${client.designation?.contains('1')}" required> Appartement 1</label><br>
+                <label><input type="radio" value="2" name="apartments"
+                              th:checked="${client.designation?.contains('2')}" required> Appartement 2</label><br>
+                <label><input type="radio" value="3" name="apartments"
+                              th:checked="${client.designation?.contains('3')}" required> Appartement 3</label><br>
+                <label><input type="radio" value="4" name="apartments"
+                              th:checked="${client.designation?.contains('4')}" required> Appartement 4</label><br>
+                <label><input type="radio" value="5" name="apartments"
+                              th:checked="${client.designation?.contains('5')}" required> Appartement 5</label><br>
+                <label><input type="radio" value="6" name="apartments"
+                              th:checked="${client.designation?.contains('6')}" required> Appartement 6</label><br>
             </div>
         </div>
 
+        <!-- Champ pour la date de début de réservation -->
         <div class="form-group">
             <label for="reservationStartDate">Date de début de réservation :</label>
-            <input type="date" class="form-control" id="reservationStartDate" th:field="*{reservationStartDate}" required>
+            <input type="date" class="form-control" id="reservationStartDate" th:field="*{reservationStartDate}"
+                   th:value="${#temporals.format(client.reservationStartDate, 'yyyy-MM-dd')}" required>
         </div>
 
+        <!-- Champ pour la date de fin de réservation -->
         <div class="form-group">
             <label for="reservationEndDate">Date de fin de réservation :</label>
-            <input type="date" class="form-control" id="reservationEndDate" th:field="*{reservationEndDate}" required>
+            <input type="date" class="form-control" id="reservationEndDate" th:field="*{reservationEndDate}"
+                   th:value="${#temporals.format(client.reservationEndDate, 'yyyy-MM-dd')}" required>
         </div>
 
+        <!-- Bouton de soumission -->
         <button type="submit" class="btn btn-primary">Enregistrer</button>
     </form>
 </div>
