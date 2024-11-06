@@ -45,13 +45,13 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
         InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
         manager.createUser(User.withDefaultPasswordEncoder()
-                .username("admin")
-                .password("admin123")
+                .username("faysal@albaraka")
+                .password("faysal2024")
                 .roles("ADMIN")
                 .build());
         manager.createUser(User.withDefaultPasswordEncoder()
-                .username("user")
-                .password("user123")
+                .username("ibtissam@albaraka")
+                .password("ibtissam2024")
                 .roles("USER")
                 .build());
         return manager;

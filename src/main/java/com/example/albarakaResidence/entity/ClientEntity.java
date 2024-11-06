@@ -158,6 +158,18 @@ public class ClientEntity {
         this.phoneNumber = phoneNumber;
     }
 
+    private boolean deleted = false;
+
+    // Getters et Setters
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     /*public ClientEntity(String clientName, String idCard, BigDecimal price, String designation,
                         LocalDate reservationStartDate, LocalDate reservationEndDate) {
         this.clientName = clientName;

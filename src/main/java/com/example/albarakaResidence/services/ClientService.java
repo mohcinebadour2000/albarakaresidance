@@ -9,22 +9,36 @@ import java.util.List;
 
 @Service
 public class ClientService {
+
     @Autowired
     private ClientRepository repo;
-    public List<ClientEntity> listAll(){
-        return repo.findAll();
+
+    // Méthode pour lister tous les clients non supprimés, triés par date de début de réservation
+    public List<ClientEntity> listAllSortedByReservationStartDate() {
+        return repo.findAllByOrderByReservationStartDateAsc();
     }
 
-    public void save (ClientEntity client){
+    // Sauvegarde ou mise à jour d'un client
+    public void save(ClientEntity client) {
         repo.save(client);
     }
 
-    public ClientEntity get(long id){
-        return repo.findById(id).get();
+    // Récupère un client par ID
+    public ClientEntity get(long id) {
+        return repo.findById(id).orElseThrow(() -> new RuntimeException("Client introuvable avec l'ID : " + id));
     }
 
-    public void delete(long id){
-        repo.deleteById(id);
+    // Suppression douce d'un client
+    public void delete(long id) {
+        ClientEntity client = get(id);
+        client.setDeleted(true);
+        repo.save(client); // Enregistre l'état mis à jour de l'entité
+    }
+
+    // Restaure un client supprimé
+    public void restore(long id) {
+        ClientEntity client = get(id);
+        client.setDeleted(false);
+        repo.save(client); // Enregistre l'état restauré de l'entité
     }
 }
-

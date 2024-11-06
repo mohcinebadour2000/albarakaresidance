@@ -17,13 +17,6 @@
     <form id="clientForm" th:action="@{/save}" th:object="${client}" method="post">
         <input type="hidden" th:field="*{id}" />
 
-        <!-- Champ pour la date d'émission -->
-        <div class="form-group">
-            <label for="issueDate">Date d'émission :</label>
-            <input type="date" class="form-control" id="issueDate" th:field="*{issueDate}"
-                   th:value="${#temporals.format(client.issueDate, 'yyyy-MM-dd')}" required>
-        </div>
-
         <!-- Champ pour le nom du client -->
         <div class="form-group">
             <label for="clientName">Nom du client :</label>
@@ -38,11 +31,12 @@
                    placeholder="Entrez la carte d'identité" required>
         </div>
 
-        <!-- Champ pour le prix -->
+        <!-- Champ pour le prix avec virgule ou point -->
         <div class="form-group">
             <label for="price">Prix :</label>
-            <input type="number" class="form-control" id="price" th:field="*{price}"
-                   placeholder="Entrez le prix" required>
+            <input type="text" class="form-control" id="price" th:field="*{price}"
+                   placeholder="Entrez le prix (ex: 1,500 ou 1.500)" pattern="^\d+([.,]\d{1,2})?$"
+                   title="Veuillez entrer un nombre avec une virgule ou un point comme séparateur décimal (ex: 1,500 ou 1.500)" required>
         </div>
 
         <!-- Champ pour le numéro de téléphone -->
@@ -94,8 +88,11 @@
 </div>
 
 <script>
-    // Ajoute un écouteur d'événement pour la soumission du formulaire
+    // Convertit la virgule en point pour le champ prix avant soumission
     document.getElementById('clientForm').addEventListener('submit', function(event) {
+        const priceField = document.getElementById('price');
+        priceField.value = priceField.value.replace(',', '.');
+
         const startDate = new Date(document.getElementById('reservationStartDate').value);
         const endDate = new Date(document.getElementById('reservationEndDate').value);
 

@@ -29,10 +29,10 @@ public class ClientController {
     @Autowired
     private PdfService pdfService;
 
-    // Page d'accueil avec calcul des totaux
+    // Page d'accueil avec calcul des totaux et tri par date de début de réservation
     @GetMapping("/")
     public String viewHomePage(Model model) {
-        List<ClientEntity> listClients = service.listAll();
+        List<ClientEntity> listClients = service.listAllSortedByReservationStartDate();
 
         // Calcul des totaux
         BigDecimal totalPriceHt = listClients.stream()
@@ -71,8 +71,7 @@ public class ClientController {
                              @RequestParam("reservationStartDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
                              @RequestParam("reservationEndDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
                              @RequestParam(value = "apartments", required = false) List<String> apartments,
-                             @RequestParam("phoneNumber") String phoneNumber,
-                             @RequestParam("issueDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate issueDate) {
+                             @RequestParam("phoneNumber") String phoneNumber) {
         if (result.hasErrors()) {
             return "new";
         }
@@ -80,7 +79,6 @@ public class ClientController {
         // Mise à jour des attributs de l'entité
         clientEntity.setReservationStartDate(startDate);
         clientEntity.setReservationEndDate(endDate);
-        clientEntity.setIssueDate(issueDate);
 
         String designation = (apartments != null && !apartments.isEmpty())
                 ? "Appartements: " + String.join(", ", apartments)
@@ -178,5 +176,17 @@ public class ClientController {
     public String showErrorPage(Model model) {
         model.addAttribute("errorMessage", "Une erreur est survenue.");
         return "error";
+    }
+
+    @GetMapping("/restore/{id}")
+    public String restoreClient(@PathVariable(name = "id") Long id) {
+        ClientEntity client = service.get(id);
+        if (client != null) {
+            client.setDeleted(false);
+            service.save(client);
+        } else {
+            return "redirect:/error";
+        }
+        return "redirect:/";
     }
 }
